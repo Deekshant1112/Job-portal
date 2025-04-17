@@ -1,0 +1,68 @@
+<h1>Scheduled Interviews</h1>
+
+<% if (scheduledInterviews.length === 0) { %>
+  <p>No interviews scheduled yet.</p>
+<% } else { %>
+  <table>
+    <thead>
+      <tr>
+        <th>Candidate Name</th>
+        <th>Job Title</th>
+        <th>Email</th>
+        <th>Interview Date</th>
+        <th>Interview Time</th>
+        <th>Interviewer</th>
+        <th>Department</th>
+        <th>Official Email</th>
+       
+        <th>Action</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% scheduledInterviews.forEach(interview => { %>
+        <tr>
+          <td><%= interview.SelectedCandidate.full_name %></td>
+          <td><%= interview.SelectedCandidate.job_title %></td>
+          <td><%= interview.SelectedCandidate.email %></td>
+          <td><%= interview.interview_date %></td>
+          <td><%= interview.interview_time %></td>
+          <td><%= interview.Employer.name %></td>
+          <td><%= interview.Employer.department %></td>
+          <td><%= interview.Employer.official_email %></td>
+          <td>
+            <div class="interview-actions">
+              <form method="POST" action="/applications/interviews/<%= interview.id %>/result">
+                <button type="submit" name="result" value="Passed" class="interview-btn pass-btn">Pass</button>
+                <button type="submit" name="result" value="Failed" class="interview-btn fail-btn">Fail</button>
+              </form>
+            </div>
+          </td>
+          
+          <!-- Status Column -->
+          <td>
+            <% if (interview.status === 'Scheduled') { %>
+              <form method="POST" action="/applications/interviews/<%= interview.id %>/update-status">
+                <select name="status" required>
+                  <option value="Scheduled" <%= interview.status === 'Scheduled' ? 'selected' : '' %>>Scheduled</option>
+                  <option value="Done" <%= interview.status === 'Done' ? 'selected' : '' %>>Done</option>
+                  <option value="Pending" <%= interview.status === 'Pending' ? 'selected' : '' %>>Pending</option>
+                </select>
+                <button type="submit">Update</button>
+              </form>
+            <% } else if (interview.status === 'Done') { %>
+              <span style="color: green;"><%= interview.status %></span>
+            <% } else if (interview.status === 'Passed') { %>
+              <span style="color: green;"><%= interview.status %></span>
+            <% } else if (interview.status === 'Failed') { %>
+              <span style="color: red;"><%= interview.status %></span>
+            <% } %>
+          </td>
+
+          <!-- Action Column -->
+         
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+<% } %>

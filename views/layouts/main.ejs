@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Job Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+</head>
+<body>
+  <nav>
+    <a href="/jobs"><i class="fas fa-home"></i> <span>Home</span></a>
+    <a href="/jobs/create"><i class="fas fa-plus-circle"></i> <span>Post a Job</span></a>
+    <a href="/applications"><i class="fas fa-folder-open"></i> <span>View Applications</span></a>
+    <a href="/applications/selected"><i class="fas fa-check-circle"></i> <span>Selected Candidates</span></a>
+    <a href="/applications/scheduled-interviews"><i class="fas fa-calendar-alt"></i> <span>Scheduled Interviews</span></a>
+    <button class="add-employee-btn" onclick="openEmployeeModal()">Add Employee</button>
+  </nav>
+  <main>
+    <header>
+      <h1>Job Portal</h1>
+    </header>
+    <%- body %>
+  </main>
+
+  <!-- Employee Modal -->
+  <div id="employeeModal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <span class="close" onclick="closeEmployeeModal()">×</span>
+      <h2>Add New Employee</h2>
+      <form action="/applications/employers/add" method="POST">
+        <label for="name">Name:</label>
+        <input type="text" name="name" required>
+
+        <label for="department">Department:</label>
+        <input type="text" name="department" required>
+
+        <label for="official_email">Official Email:</label>
+        <input type="email" name="official_email" required>
+
+        <button type="submit">Add Employee</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function openEmployeeModal() {
+      document.getElementById('employeeModal').style.display = 'flex';
+    }
+
+    function closeEmployeeModal() {
+      document.getElementById('employeeModal').style.display = 'none';
+    }
+  </script>
+</body>
+</html>

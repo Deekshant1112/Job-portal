@@ -1,0 +1,15 @@
+<h1>Job Openings</h1>
+<% if (jobs.length === 0) { %>
+  <p>No jobs available.</p>
+<% } else { %>
+  <ul>
+    <% jobs.forEach(job => { %>
+      <li>
+        <a href="/jobs/<%= job.id %>">
+          <h2><%= job.title %></h2>
+          <p><%= job.location || 'Not specified' %> | <%= job.type || 'Not specified' %></p>
+        </a>
+      </li>
+    <% }) %>
+  </ul>
+<% } %>
