@@ -25,36 +25,43 @@ exports.addEmployer = async (req, res) => {
 
 
 
-exports.applyJob = async (req, res) => {
+  exports.applyJob = async (req, res) => {
     try {
-        const { first_name, last_name, email, phone, cover_letter } = req.body;
-        const resume_url = req.file ? `/uploads/${req.file.filename}` : null;
-
-        let applicant = await Applicant.findOne({ where: { email } });
-        if (!applicant) {
-            applicant = await Applicant.create({
-                first_name,
-                last_name,
-                email,
-                phone,
-                resume_url,
-            });
-        } else {
-            await applicant.update({ resume_url });
-        }
-
-        await Application.create({
-            job_id: req.params.id,
-            applicant_id: applicant.id,
-            cover_letter,
+      const { first_name, last_name, email, phone, cover_letter } = req.body;
+      
+      // Check if file was uploaded
+      const resume_url = req.file ? req.file.location : null; // S3 URL is in `req.file.location`
+  
+      let applicant = await Applicant.findOne({ where: { email } });
+      if (!applicant) {
+        // Create new applicant if not found
+        applicant = await Applicant.create({
+          first_name,
+          last_name,
+          email,
+          phone,
+          resume_url,
         });
-
-        res.render('applications/success');
+      } else {
+        // Update applicant with the new resume URL
+        await applicant.update({ resume_url });
+      }
+  
+      // Create application entry
+      await Application.create({
+        job_id: req.params.id,
+        applicant_id: applicant.id,
+        cover_letter,
+      });
+  
+      // Render success page after application
+      res.render('applications/success');
     } catch (error) {
-        console.error('Apply job error:', error);
-        res.status(500).send('Server Error');
+      console.error('Apply job error:', error);
+      res.status(500).send('Server Error');
     }
-};
+  };
+  
 
 exports.getApplications = async (req, res) => {
     try {
@@ -321,6 +328,7 @@ exports.scheduleInterview = async (req, res) => {
       res.status(500).send('Server Error');
     }
   };
+
 
 
   exports.updateInterviewStatus = async (req, res) => {
